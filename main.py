@@ -38,18 +38,17 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, estado_maior_perce
     c.setFont("Helvetica", 12)
     
     # Atraso por Estado
-    c.drawString(50, 700, "Atraso por Estado:")
+    c.drawString(50, 700, "Média de atraso em dias, por Estado:")
     for i, (estado, atraso) in enumerate(atraso_por_estado.items()):
         c.drawString(70, 680 - i * 20, f"{estado}: {atraso} dias")
 
     # Calcula o número de estados
     num_estados = len(atraso_por_estado)
-    
     # Ajusta a posição Y da linha total_entrega_dentro_prazo
     y_position_total_entrega = 670 - num_estados * 20
     
     # Total de Entregas dentro do Prazo
-    c.drawString(50, y_position_total_entrega, f"Total Entrega dentro do Prazo: {total_entrega_dentro_prazo}")
+    c.drawString(50, y_position_total_entrega, f"Total de Entregas Dentro do Prazo: {total_entrega_dentro_prazo}")
     
     # Estado com Maior Percentual de Atraso
     c.drawString(50, y_position_total_entrega - 20, f"Estado com Maior Percentual de Atraso: {estado_maior_percentual_atraso}")
