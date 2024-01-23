@@ -41,19 +41,25 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, estado_maior_perce
     c.drawString(50, 700, "Atraso por Estado:")
     for i, (estado, atraso) in enumerate(atraso_por_estado.items()):
         c.drawString(70, 680 - i * 20, f"{estado}: {atraso} dias")
+
+    # Calcula o número de estados
+    num_estados = len(atraso_por_estado)
+    
+    # Ajusta a posição Y da linha total_entrega_dentro_prazo
+    y_position_total_entrega = 670 - num_estados * 20
     
     # Total de Entregas dentro do Prazo
-    c.drawString(50, 600, f"Total Entrega dentro do Prazo: {total_entrega_dentro_prazo}")
+    c.drawString(50, y_position_total_entrega, f"Total Entrega dentro do Prazo: {total_entrega_dentro_prazo}")
     
     # Estado com Maior Percentual de Atraso
-    c.drawString(50, 580, f"Estado com Maior Percentual de Atraso: {estado_maior_percentual_atraso}")
+    c.drawString(50, y_position_total_entrega - 20, f"Estado com Maior Percentual de Atraso: {estado_maior_percentual_atraso}")
     
     # Cidade com Maior Percentual de Atraso
-    c.drawString(50, 560, f"Cidade com Maior Percentual de Atraso: {cidade_maior_percentual_atraso}")
+    c.drawString(50, y_position_total_entrega - 40, f"Cidade com Maior Percentual de Atraso: {cidade_maior_percentual_atraso}")
     
     # Percentual de Qualidade de Entrega
-    c.drawString(50, 540, f"Percentual de Qualidade de Entrega: {percentual_qualidade_entrega:.2f}%")
-    
+    c.drawString(50, y_position_total_entrega - 60, f"Percentual de Qualidade de Entrega: {percentual_qualidade_entrega:.2f}%")
+        
     # Salva o arquivo PDF
     c.save()
     print(f"O arquivo {filename} foi gerado com sucesso.")
