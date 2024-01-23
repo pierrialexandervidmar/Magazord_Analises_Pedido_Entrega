@@ -1,1 +1,5 @@
+Instale o Python 3.10 ou superior.
+
+Instale as seguintes bibliotes:
+
 pip install pandas reportlab openpyxl pyarrow
