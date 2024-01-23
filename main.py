@@ -34,6 +34,9 @@ atraso_por_estado = df.groupby('Estado')['Dias para Entrega'].mean().round(2)
 # Dataframe com somente o número de registros onde os dias de entrega foram menores ou igual ao prazo estipulado
 total_entrega_dentro_prazo = df[df['Dias para Entrega'] <= df['Prazo para Entrega']].shape[0]
 
+# Dataframe com somente o número de registros onde os dias de entrega foram maiores ao prazo estipulado
+total_entrega_fora_prazo = df[df['Dias para Entrega'] > df['Prazo para Entrega']].shape[0]
+
 # Pegamos os registros com atrasos, agrupamos por estado, então calculamos a média de atraso de cada estado.
 # Ao final devolvemos o estamos com o maior valor médio de atraso.
 estado_maior_percentual_atraso = (df['Dias para Entrega'] > df['Prazo para Entrega']).groupby(df['Estado']).mean().idxmax()
@@ -47,7 +50,7 @@ percentual_qualidade_entrega = (total_entrega_dentro_prazo / df.shape[0]) * 100
 
 
 # Função para criar o PDF
-def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, estado_maior_percentual_atraso,
+def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora_prazo, estado_maior_percentual_atraso,
                cidade_maior_percentual_atraso, percentual_qualidade_entrega):
     filename = "relatorio_entregas.pdf"
     
@@ -73,15 +76,18 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, estado_maior_perce
     
     # Total de Entregas dentro do Prazo
     c.drawString(50, y_position_total_entrega, f"Total de Entregas Dentro do Prazo: {total_entrega_dentro_prazo}")
+
+    # Total de Entregas fora do Prazo
+    c.drawString(50, y_position_total_entrega - 20, f"Total de Entregas Fora do Prazo: {total_entrega_fora_prazo}")
     
     # Estado com Maior Percentual de Atraso
-    c.drawString(50, y_position_total_entrega - 20, f"Estado com Maior Percentual de Atraso: {estado_maior_percentual_atraso}")
+    c.drawString(50, y_position_total_entrega - 40, f"Estado com Maior Percentual de Atraso: {estado_maior_percentual_atraso}")
     
     # Cidade com Maior Percentual de Atraso
-    c.drawString(50, y_position_total_entrega - 40, f"Cidade com Maior Percentual de Atraso: {cidade_maior_percentual_atraso}")
+    c.drawString(50, y_position_total_entrega - 60, f"Cidade com Maior Percentual de Atraso: {cidade_maior_percentual_atraso}")
     
     # Percentual de Qualidade de Entrega
-    c.drawString(50, y_position_total_entrega - 60, f"Percentual de Qualidade de Entrega: {percentual_qualidade_entrega:.2f}%")
+    c.drawString(50, y_position_total_entrega - 80, f"Percentual de Qualidade de Entrega: {percentual_qualidade_entrega:.2f}%")
         
     # Salva o arquivo PDF
     c.save()
@@ -90,5 +96,5 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, estado_maior_perce
 
 
 # Chama a função para criar o PDF
-create_pdf(atraso_por_estado, total_entrega_dentro_prazo, estado_maior_percentual_atraso,
+create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora_prazo, estado_maior_percentual_atraso,
            cidade_maior_percentual_atraso, percentual_qualidade_entrega)
