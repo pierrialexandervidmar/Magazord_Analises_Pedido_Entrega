@@ -38,12 +38,20 @@ total_entrega_dentro_prazo = df[df['Dias para Entrega'] <= df['Prazo para Entreg
 total_entrega_fora_prazo = df[df['Dias para Entrega'] > df['Prazo para Entrega']].shape[0]
 
 # Pegamos os registros com atrasos, agrupamos por estado, então calculamos a média de atraso de cada estado.
-# Ao final devolvemos o estamos com o maior valor médio de atraso.
+# Ao final devolvemos o estado com o maior valor médio de atraso.
 estado_maior_percentual_atraso = (df['Dias para Entrega'] > df['Prazo para Entrega']).groupby(df['Estado']).mean().idxmax()
+
+# Pegamos os registros com atrasos, agrupamos por estado, então calculamos a média de atraso de cada estado.
+# Ao final devolvemos o estado com o menor valor médio de atraso.
+estado_menor_percentual_atraso = (df['Dias para Entrega'] <= df['Prazo para Entrega']).groupby(df['Estado']).mean().idxmax()
 
 # Pegamos os registros com atrasos, agrupamos por cidade, então calculamos a média de atraso por cidade.
 # Ao final devolvemos a cidade com o maior valor médio de atraso. 
 cidade_maior_percentual_atraso = (df['Dias para Entrega'] > df['Prazo para Entrega']).groupby(df['Cidade']).mean().idxmax()
+
+# Pegamos os registros com atrasos, agrupamos por cidade, então calculamos a média de atraso por cidade.
+# Ao final devolvemos a cidade com o menor valor médio de atraso. 
+cidade_menor_percentual_atraso = (df['Dias para Entrega'] <= df['Prazo para Entrega']).groupby(df['Cidade']).mean().idxmax()
 
 # Porcentagem do toal de entregas dentro do prazo
 percentual_qualidade_entrega = (total_entrega_dentro_prazo / df.shape[0]) * 100
@@ -51,7 +59,8 @@ percentual_qualidade_entrega = (total_entrega_dentro_prazo / df.shape[0]) * 100
 
 # Função para criar o PDF
 def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora_prazo, estado_maior_percentual_atraso,
-               cidade_maior_percentual_atraso, percentual_qualidade_entrega):
+            estado_menor_percentual_atraso, cidade_maior_percentual_atraso, cidade_menor_percentual_atraso, percentual_qualidade_entrega):
+    
     filename = "relatorio_entregas.pdf"
     
     # Inicializa o objeto canvas
@@ -75,19 +84,20 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
     y_position_total_entrega = 670 - num_estados * 20
     
     # Total de Entregas dentro do Prazo
-    c.drawString(50, y_position_total_entrega, f"Total de Entregas Dentro do Prazo: {total_entrega_dentro_prazo}")
+    c.drawString(50, y_position_total_entrega, f"Total Dentro do Prazo: {total_entrega_dentro_prazo}")
 
     # Total de Entregas fora do Prazo
-    c.drawString(50, y_position_total_entrega - 20, f"Total de Entregas Fora do Prazo: {total_entrega_fora_prazo}")
+    c.drawString(50, y_position_total_entrega - 20, f"Total Fora do Prazo: {total_entrega_fora_prazo}")
     
     # Estado com Maior Percentual de Atraso
-    c.drawString(50, y_position_total_entrega - 40, f"Estado com Maior Percentual de Atraso: {estado_maior_percentual_atraso}")
+    c.drawString(50, y_position_total_entrega - 40, f"Atraso por Estado %:     Maior: {estado_maior_percentual_atraso}   ||     Menor: {estado_menor_percentual_atraso}")
     
     # Cidade com Maior Percentual de Atraso
-    c.drawString(50, y_position_total_entrega - 60, f"Cidade com Maior Percentual de Atraso: {cidade_maior_percentual_atraso}")
-    
+    c.drawString(50, y_position_total_entrega - 60, f"Atraso por Cidade %:     Maior: {cidade_maior_percentual_atraso}   ||     Menor: {cidade_menor_percentual_atraso}")
+        
     # Percentual de Qualidade de Entrega
     c.drawString(50, y_position_total_entrega - 80, f"Percentual de Qualidade de Entrega: {percentual_qualidade_entrega:.2f}%")
+
         
     # Salva o arquivo PDF
     c.save()
@@ -97,4 +107,4 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
 
 # Chama a função para criar o PDF
 create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora_prazo, estado_maior_percentual_atraso,
-           cidade_maior_percentual_atraso, percentual_qualidade_entrega)
+           estado_menor_percentual_atraso, cidade_maior_percentual_atraso, cidade_menor_percentual_atraso, percentual_qualidade_entrega)
