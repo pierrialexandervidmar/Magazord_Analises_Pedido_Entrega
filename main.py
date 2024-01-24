@@ -6,9 +6,9 @@ Versão: 1.0.0
 
 Descrição:
     Este script gera um relatório de entregas com base em dados fornecidos em um arquivo CSV.
-    Calcula a média de dias de entrega por estado, o total de entregas dentro do prazo, o estado
-    com o maior percentual de atraso, a cidade com o maior percentual de atraso e a percentagem de
-    qualidade de entrega.
+    Calcula a média de dias de entrega por estado, região e transportadora, o total de entregas dentro do prazo, o estado
+    com o maior percentual de atraso, a região com o maior percentual de atraso, a transportadora com o maior percentual de atraso,
+    a cidade com o maior percentual de atraso e a percentagem de qualidade de entrega.
 
 Dependências:
     - pandas
@@ -20,7 +20,6 @@ Uso:
 
 Exemplo:
     python main.py
-
 """
 import pandas as pd
 from reportlab.lib.pagesizes import letter
