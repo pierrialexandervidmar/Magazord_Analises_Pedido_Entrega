@@ -5,7 +5,7 @@ Data de Criação: 2024-01-01
 Versão: 1.0.0
 
 Descrição:
-    Este script gera um relatório de entregas com base em dados fornecidos em um arquivo CSV.
+    Este script gera um relatório de entregas com base em dados fornecidos em um arquivo CSV da Postagem x Entrega.
     Calcula a média de dias de entrega por estado, o total de entregas dentro do prazo, o estado
     com o maior percentual de atraso, a cidade com o maior percentual de atraso e a percentagem de
     qualidade de entrega.
