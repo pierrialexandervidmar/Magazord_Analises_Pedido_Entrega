@@ -43,9 +43,9 @@ cidade_maior_percentual_atraso = (df['Dias para Entrega'] > df['Prazo para Entre
 # Ao final devolvemos a cidade com o menor valor médio de atraso. 
 cidade_menor_percentual_atraso = (df['Dias para Entrega'] <= df['Prazo para Entrega']).groupby(df['Cidade']).mean().idxmax()
 
-
 # Porcentagem do toal de entregas dentro do prazo
 percentual_qualidade_entrega = (total_entrega_dentro_prazo / df.shape[0]) * 100
+
 
 # Função para criar o PDF
 def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora_prazo, estado_maior_percentual_atraso,
@@ -61,15 +61,19 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
     c.setFont("Helvetica-Bold", 16)
     c.drawCentredString(300, 750, "Análise de Entregas - SLA")
     
-    # Adiciona os resultados ao PDF
     c.setFont("Helvetica-Bold", 12)
-    
     # Atraso por Estado
     c.drawString(50, 700, "Análises por Estado:")
+    c.setFont("Helvetica", 12)
+
+    # Calcular a porcentagem de entregas no prazo para cada estado
+    porcentagem_qualidade_por_estado = (df.groupby('Estado')['Dias para Entrega'].apply(lambda x: (x <= df.loc[x.index, 'Prazo para Entrega']).mean()) * 100).sort_values(ascending=False)
+
+    # Ordenar estados com base na porcentagem de entregas no prazo em ordem decrescente
+    estados_ordenados = porcentagem_qualidade_por_estado.index
 
     # Adiciona os resultados ao PDF
-    c.setFont("Helvetica", 12)
-    for i, estado in enumerate(atraso_por_estado.index):
+    for i, estado in enumerate(estados_ordenados):
         # Filtra o dataframe para obter todas as entregas no estado atual
         entregas_estado = df[df['Estado'] == estado]
         
@@ -84,7 +88,7 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
         percentual_qualidade = (entregas_no_prazo / total_entregas) * 100
         
         # Formata o texto com as informações desejadas
-        text = f"{estado}: {total_entregas} entregas - {entregas_atrasadas} atrasadas - {entregas_no_prazo} no prazo - {percentual_qualidade:.2f}% de qualidade"
+        text = f"{percentual_qualidade:.2f}% de qualidade - {estado}: {total_entregas} entregas - {entregas_atrasadas} atrasadas - {entregas_no_prazo} no prazo."
         
         c.drawString(50, 680 - i * 25, text)
 

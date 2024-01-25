@@ -24,7 +24,7 @@ Exemplo:
 import subprocess
 
 # Chama o script para criar o PDF em um novo processo
-process = subprocess.Popen(["python3", "script.py"])
+process = subprocess.Popen(["python", "script.py"])
 
 # Aguarda o término do processo secundário
 process.communicate()
