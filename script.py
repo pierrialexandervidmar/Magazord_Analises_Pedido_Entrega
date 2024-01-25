@@ -101,8 +101,14 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, 700, "Análises por Região:")
     c.setFont("Helvetica", 12)
+
+    # Calcular a porcentagem de entregas no prazo para cada estado
+    porcentagem_qualidade_por_regiao = (df.groupby('Região')['Dias para Entrega'].apply(lambda x: (x <= df.loc[x.index, 'Prazo para Entrega']).mean()) * 100).sort_values(ascending=False)
+
+    # Ordenar estados com base na porcentagem de entregas no prazo em ordem decrescente
+    regioes_ordenadas = porcentagem_qualidade_por_regiao.index
     
-    for i, regiao in enumerate(atraso_por_regiao.index):
+    for i, regiao in enumerate(regioes_ordenadas):
         # Filtra o dataframe para obter todas as entregas na região atual
         entregas_regiao = df[df['Região'] == regiao]
 
@@ -117,7 +123,7 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
         percentual_qualidade_regiao = (entregas_no_prazo_regiao / total_entregas_regiao) * 100
 
         # Formata o texto com as informações desejadas
-        text_regiao = f"{regiao}: {total_entregas_regiao} entregas - {entregas_atrasadas_regiao} atrasadas - {entregas_no_prazo_regiao} no prazo - {percentual_qualidade_regiao:.2f}% de qualidade"
+        text_regiao = f"{percentual_qualidade_regiao:.2f}% de qualidade - {regiao}: {total_entregas_regiao} entregas - {entregas_atrasadas_regiao} atrasadas - {entregas_no_prazo_regiao} no prazo."
         
         c.drawString(50, 660 - i * 25, text_regiao)
 
@@ -130,8 +136,15 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, 700, "Análises por Transportadoras:")
     c.setFont("Helvetica", 12)
+
     
-    for i, transportadora in enumerate(atraso_por_transportadora.index):
+    # Calcular a porcentagem de entregas no prazo para cada estado
+    porcentagem_qualidade_por_transportadora = (df.groupby('Transportadora')['Dias para Entrega'].apply(lambda x: (x <= df.loc[x.index, 'Prazo para Entrega']).mean()) * 100).sort_values(ascending=False)
+
+    # Ordenar estados com base na porcentagem de entregas no prazo em ordem decrescente
+    transportadoras_ordenadas = porcentagem_qualidade_por_transportadora.index
+    
+    for i, transportadora in enumerate(transportadoras_ordenadas):
         # Filtra o dataframe para obter todas as entregas na transportadora atual
         entregas_transportadora = df[df['Transportadora'] == transportadora]
 
@@ -149,7 +162,7 @@ def create_pdf(atraso_por_estado, total_entrega_dentro_prazo, total_entrega_fora
             percentual_qualidade_transportadora = 0
 
         # Formata o texto com as informações desejadas
-        text_transportadora = f"{transportadora}: {total_entregas_transportadora} entregas - {entregas_atrasadas_transportadora} atrasadas - {entregas_no_prazo_transportadora} no prazo - {percentual_qualidade_transportadora:.2f}% de qualidade"
+        text_transportadora = f"{percentual_qualidade_transportadora:.2f}% de qualidade - {transportadora}: {total_entregas_transportadora} entregas - {entregas_atrasadas_transportadora} atrasadas - {entregas_no_prazo_transportadora} no prazo."
         
         c.drawString(50, 660 - i * 20, text_transportadora)
 
